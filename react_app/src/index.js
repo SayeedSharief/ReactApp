@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
+import Library from './Library';
+import App from './App';
 
 
 const MessageProps = {
@@ -8,6 +10,12 @@ const MessageProps = {
   pagesCount: 200,
   progress: 150
 }
+
+const bookList = [
+  {author:"sayeed", title:"Hajj", pages:"203"},
+  {author:"saad", title:"Umrah", pages:"223"},
+  {author:"uzair", title:"Zakat", pages:"103"},
+]
 
 // ReactDOM.render(
 //   <div style={style}>
@@ -45,5 +53,6 @@ class Message extends Component {
     )
   }
 }
-
+render(<App />, document.getElementById('header'));
+render(<Library books={bookList}/>, document.getElementById('library'));
 render(<Message author={MessageProps.author} publisher={MessageProps.publisher} pages={MessageProps.pagesCount} progress={MessageProps.progress} />, document.getElementById('root'));
