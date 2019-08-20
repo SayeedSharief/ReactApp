@@ -27,12 +27,45 @@ class Library extends Component {
         this.state = {
             open: true,
             freeBookmark: true,
-            hiring: false
+            hiring: false, 
+            loading: false,
+            users: []
         }
         // Make this method accessible "this" properties of this class. 
         // Here state is being accessed
         this.toggleOpenClosed = this.toggleOpenClosed.bind(this)
+        this.submit = this.submit.bind(this)
     }
+    //Called when component is mounted
+    componentDidMount(){
+        console.log('Component Mounted')
+      
+    }
+
+    // Called when component is updated
+    componentDidUpdate(){
+        console.log('Component Updated')
+    }
+
+    // Called before unmounting the component
+    componentWillUnmount(){
+        console.log('Component will unmount soon')
+    }
+
+    async submit(){
+        let username = this.username.value
+        let url = 'https://api.github.com/users/' + username
+        var res = await fetch(url).then(data => data.json())
+        console.log('res = ',res)
+        let temp = this.state.users
+        temp.push(res)
+
+        this.setState({
+            users : temp
+        })
+        console.log(username)
+    }
+
     toggleOpenClosed(){
         //when state changes component will be called again to render state changes
         this.setState(prevState =>({
@@ -48,15 +81,27 @@ class Library extends Component {
     }
     render() {
         console.log('Props to Library: ', this.props)
+        console.log('State = ', this.state)
         const { books } = this.props
+        const { users } = this.state
         // OR
         // const books = this.props.books
         return (
             <div>
                 <div>
                     <h1>Our Library is {this.state.open ? 'open' : 'closed'}</h1>
+                    <input type="text" ref={(c) => this.username=c} name="username"/>
+                    <button onClick={this.submit}>Submit</button>
                     {this.state.hiring? <Hiring /> : <NotHiring />}
                     <button onClick={this.toggleOpenClosed}>Toggle</button>
+                </div>
+                <div>
+                    {users.map(
+                        (user, i) => <div key={i}>
+                                        <h1>Username: {user.login}</h1>
+                                        <img alt={user.login} src={user.avatar_url} height="100"/>
+                                    </div>
+                    )}
                 </div>
                 <div>
                     {books.map(
